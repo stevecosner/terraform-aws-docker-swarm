@@ -1,30 +1,24 @@
-terraform {
-  required_providers {
-    digitalocean = {
-      source = "digitalocean/digitalocean"
-      version = "1.22.2"
-    }
-  }
-  required_version = ">= 0.13"
+provider "aws" {
+  region     = "us-east-2"
 }
 
 
-provider "digitalocean" {
-    token = "${var.token}"
-}
-
-resource "digitalocean_droplet" "web" {
-    name  = "swarm1"
-    image = "docker-18-04"
-    region = "nyc1"
-    size   = "s-1vcpu-1gb"
-    user_data  = "${file("web.conf")}"
-    ssh_keys = [
-    "${var.ssh_keys}"
-    ]
+resource "aws_instance" "web1" {
+  ami           = "ami-0b32ec75f2cd21d30"
+  instance_type = "t2.micro"
+  user_data          = "${file("web.conf")}"
+  key_name = "id_rsa"
 }
 
 
-output "ip4" {
-    value = "${digitalocean_droplet.web.ipv4_address}"
+
+
+
+
+output "public_instance_ip1" {
+  value = aws_instance.web1.public_ip
 }
+
+
+
+

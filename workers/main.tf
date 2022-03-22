@@ -1,58 +1,36 @@
-
-terraform {
-  required_providers {
-    digitalocean = {
-      source = "digitalocean/digitalocean"
-      version = "1.22.2"
-    }
-  }
-  required_version = ">= 0.13"
+provider "aws" {
+  region     = "us-east-2"
 }
 
 
-provider "digitalocean" {
-    token = "${var.token}"
+
+resource "aws_instance" "web2" {
+  ami           = "ami-0b32ec75f2cd21d30"
+  user_data          = "${file("web.conf")}"
+  instance_type = "t2.micro"
+  key_name = "id_rsa"
 }
 
-resource "digitalocean_droplet" "web2" {
-    name  = "swarm2"
-    image = "docker-18-04"
-    region = "nyc1"
-    size   = "s-1vcpu-1gb"
-    user_data  = "${file("web.conf")}"
-    ssh_keys = [
-    "${var.ssh_keys}"
-    ]
+resource "aws_instance" "web3" {
+  ami           = "ami-0b32ec75f2cd21d30"
+  user_data          = "${file("web.conf")}"
+  instance_type = "t2.micro"
+  key_name = "id_rsa"
 }
 
-resource "digitalocean_droplet" "web3" {
-    name  = "swarm3"
-    image = "docker-18-04"
-    region = "nyc1"
-    size   = "s-1vcpu-1gb"
-    user_data  = "${file("web.conf")}"
-    ssh_keys = [
-    "${var.ssh_keys}"
-    ]
+
+
+
+
+output "public_instance_ip2" {
+  value = aws_instance.web2.public_ip
 }
 
-resource "digitalocean_droplet" "web4" {
-    name  = "swarm4"
-    image = "docker-18-04"
-    region = "nyc1"
-    size   = "s-1vcpu-1gb"
-    user_data  = "${file("web.conf")}"
-    ssh_keys = [
-    "${var.ssh_keys}"
-    ]
+output "public_instance_ip3" {
+  value = aws_instance.web3.public_ip
 }
 
-output "ip" {
-    value = "${digitalocean_droplet.web2.ipv4_address}"
-}
-output "ip2" {
-    value = "${digitalocean_droplet.web3.ipv4_address}"
-}
-output "ip3" {
-    value = "${digitalocean_droplet.web4.ipv4_address}"
-}
+
+
+
+

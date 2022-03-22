@@ -13,7 +13,7 @@ docker swarm init --advertise-addr MANAGER_IP
 
 Step 3
 
-Update the web.conf file in the workers folder.
+Update the web.conf file in the workers folder with the correct --token advertised after inputting the above init command.
 
 Step 4
 
